@@ -3,6 +3,7 @@ package MODELOVENDEDORES;
 import MODELO.ah4DAORelacional;
 import POO.facturaPOO;
 import POO.productosPOO;
+import VISTAS2.vendedores;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -25,7 +26,7 @@ import javax.swing.JOptionPane;
 
 public class crearPDF {
     
-    //String rutaG = "C:\\Users\\rodri\\OneDrive\\Documentos\\NetBeansProjects";
+    public String ruta;
     Document documento = new Document();
     FileOutputStream fileOutputStream;    
     com.itextpdf.text.Font fuenteTitulo = FontFactory.getFont(FontFactory.TIMES_ROMAN, 14);
@@ -48,33 +49,7 @@ public class crearPDF {
         abrir(as,noFactura,fecha,hora,nombreVendedor,noCaja,nitCliente,nombreCliente,total);
         
     }
-    
-//    public void generar_pdf() throws FileNotFoundException, DocumentException {
-//        FileOutputStream gen = new FileOutputStream("FACTURA_ELECTRONICA_BLUE_MALL.pdf");
-//        Document documento = new Document();
-//
-//        PdfWriter.getInstance(documento, gen);
-//        //abrir();
-//
-//        Paragraph parrafo = new Paragraph("Datos de Clientes");
-//        
-//        
-//        parrafo.setAlignment(0);
-//        documento.add(new Paragraph("hOLA"));
-//        documento.add(new Paragraph("\n"));
-//
-//        documento.close();
-//        JOptionPane.showMessageDialog(null, "El archivo se creo correctamente");
-//        try {
-//            File clientes_doc = new File("FACTURA_ELECTRONICA_BLUE_MALL.pdf");
-//            Desktop.getDesktop().open(clientes_doc);
-//        } catch (Exception e) {
-//        }
-//    }
-    
-    
-    
-    
+
     public void abrir(LinkedList<facturaPOO> as,String noFactura, String fecha,String hora,String nombreVendedor,String noCaja, String nitCliente, String nombreCliente,String total) throws DocumentException{
         documento.open();
         titulo(as,noFactura,fecha,hora,nombreVendedor,noCaja,nitCliente,nombreCliente,total);
@@ -87,9 +62,7 @@ public class crearPDF {
         celda.setHorizontalAlignment(Element.ALIGN_CENTER);
         tabla.addCell(celda);
         documento.add(tabla);
-        //String b = texto;
         parrafoTitulo(as,noFactura,fecha,hora,nombreVendedor,noCaja,nitCliente,nombreCliente,total);
-        //saltosLineaSinparametros();
         
     }
     public void parrafoTitulo(LinkedList<facturaPOO> as,String noFactura, String fecha,String hora,String nombreVendedor,String noCaja, String nitCliente, String nombreCliente,String total) throws DocumentException{
@@ -150,6 +123,7 @@ public class crearPDF {
     private void total(String total) throws DocumentException{
         Paragraph parrafo = new Paragraph();
         parrafo.setAlignment(1);
+        parrafo.add(new Phrase(Chunk.NEWLINE));
         parrafo.add(new Phrase("TOTAL - Q."+total+"\n",fuenteParrafoNegrita));
         parrafo.add(new Phrase(Chunk.NEWLINE));
         parrafo.add(new Phrase("ES UN PLACER SERVIRLE"));
@@ -163,13 +137,15 @@ public class crearPDF {
     
     public void cerrar(){
         documento.close();
-        //JOptionPane.showMessageDialog(null, "El archivo se creo correctamente");
         try {
             File clientes_doc = new File(nombreArchivo);
             
             Desktop.getDesktop().open(clientes_doc);
+            ruta = String.valueOf(clientes_doc.getAbsoluteFile());
         } catch (Exception e) {
         }
         
     }
+    
+    
 }

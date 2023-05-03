@@ -5,10 +5,72 @@ public class hisventasPOO {
     private int id_cliente;
     private String fecha;
     private String total;
-    private byte[] accion;
+    private String accion;
+    //private byte[] accion;
 
     
+    
+    private int nit;
+    private String nombreC;
 
+    public hisventasPOO(int id_cliente, String fecha, String total, String accion) {
+        this.id_cliente = id_cliente;
+        this.fecha = fecha;
+        this.total = total;
+        this.accion = accion;
+    }
+
+    public hisventasPOO(int id_cliente, String fecha, String total) {
+        this.id_cliente = id_cliente;
+        this.fecha = fecha;
+        this.total = total;
+    }
+
+//  
+    
+
+    public String getAccion() {
+        return accion;
+    }
+
+    public void setAccion(String accion) {
+        this.accion = accion;
+    }
+
+ 
+
+    
+    
+    
+    
+    public hisventasPOO() {
+    }
+
+  
+   
+   
+
+   
+    
+    
+    
+    public int getNit() {
+        return nit;
+    }
+
+    public void setNit(int nit) {
+        this.nit = nit;
+    }
+
+    public String getNombreC() {
+        return nombreC;
+    }
+
+    public void setNombreC(String nombreC) {
+        this.nombreC = nombreC;
+    }
+   
+    
     public int getNo_factura() {
         return no_factura;
     }
@@ -17,15 +79,7 @@ public class hisventasPOO {
         this.no_factura = no_factura;
     }
 
-    public byte[] getAccion() {
-        return accion;
-    }
-
-    public void setAccion(byte[] accion) {
-        this.accion = accion;
-    }
-
-    
+  
 
     public int getId_cliente() {
         return id_cliente;

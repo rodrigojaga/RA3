@@ -7,7 +7,7 @@ public class conexk {
 
     
             Connection con;
-    String url="jdbc:mysql://localhost:3306/ah4";
+    String url="jdbc:mysql://localhost:3306/ra3";
     String user="root";
     String pass="";
     public Connection Conectar(){

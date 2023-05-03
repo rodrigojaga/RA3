@@ -99,8 +99,7 @@ public class ra3DAORelacional implements ra3DAO{
     //pendiente
    @Override
     public void crearhisVentas(hisventasPOO ah) {
-        crearPDF cp = new crearPDF();
-        String a = cp.nombreArchivo;
+        
         String sql = "insert into hisventa(id_cliente,fecha,total,accion) values (?,?,?,?);";
         try{
             con = acceso.Conectar();
@@ -108,7 +107,7 @@ public class ra3DAORelacional implements ra3DAO{
             ps.setInt(1, ah.getId_cliente());
             ps.setString(2, ah.getFecha());
             ps.setString(3, ah.getTotal());
-            ps.setBytes(4, ah.getAccion());
+            ps.setString(4, ah.getAccion());
             ps.executeUpdate();
         }catch(Exception e){JOptionPane.showMessageDialog(null,"Algo ha salido mal: \n"+e+" \n Contactese con el desarrollador");}
     }
@@ -120,7 +119,6 @@ public class ra3DAORelacional implements ra3DAO{
     public void modificarProducto(int codigo, int cantidad) {
         String sql = "update productos set cantidad=cantidad-? WHERE id_producto = ?;";
         try {
-            System.out.println("llego");
             con = acceso.Conectar();
             ps = con.prepareStatement(sql);
             
@@ -202,6 +200,34 @@ public class ra3DAORelacional implements ra3DAO{
             
         }catch(Exception e){}
     }
+     
+     @Override
+    public LinkedList<listarFacturasPOO> listarfacturasU(String factura,String nit, String nombre, String fecha) {
         
+        String sql = "SELECT hisventa.no_factura,clientes.nit,clientes.nombre,hisventa.fecha, "
+                + "hisventa.total,hisventa.accion FROM hisventa INNER JOIN clientes ON hisventa.id_cliente ="
+                + " clientes.id_cliente WHERE hisventa.no_factura LIKE '%"+factura+"%' AND clientes.nombre LIKE '%"+nombre+"%' AND "
+                + "clientes.nit LIKE '%"+nit+"%' AND hisventa.fecha LIKE '%"+fecha+"%';";
+        
+      
+        try {
+            LinkedList<listarFacturasPOO> listar = new LinkedList<>();
+            con = acceso.Conectar();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();    
+     
+            while (rs.next()) {
+                
+                listar.add(new listarFacturasPOO(rs.getInt(1),rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5),rs.getBytes(6)));
+                 
+            }
+            return listar;
+   
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+    
         
 }

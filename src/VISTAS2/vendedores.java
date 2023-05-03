@@ -18,7 +18,11 @@ import VISTAS.login;
 import com.itextpdf.text.DocumentException;
 import img.TextPrompt;
 import java.awt.Color;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.Collections;
 import java.time.LocalDate;
@@ -30,6 +34,8 @@ import java.util.logging.Logger;
 
 import java.time.LocalDateTime;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 /**
  *
  * @author rodri
@@ -49,7 +55,7 @@ public class vendedores extends javax.swing.JFrame {
     
     LinkedList<String> cP = new LinkedList<>();
     LinkedList<String> canti = new LinkedList<>();
-    DefaultTableModel t1,t2;
+    DefaultTableModel t1,t2,t3;
      LocalDate fechaActual = LocalDate.now();
     public vendedores() {
         initComponents();
@@ -59,7 +65,10 @@ public class vendedores extends javax.swing.JFrame {
         suma();
             fecha.setText(fechaActual.toString());
         jButton6.setBackground(new Color(149,240,150));
-        //noFaca();
+        noFaca();
+        leer.setVisible(false);
+        limp.setBackground(new Color(136,143,255));
+        
     }
 
     /**
@@ -76,20 +85,21 @@ public class vendedores extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
-        jButton7 = new javax.swing.JButton();
+        lim = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        factu = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
+        nomU = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
-        jTextField11 = new javax.swing.JTextField();
+        niU = new javax.swing.JTextField();
+        feU = new javax.swing.JTextField();
         jButton8 = new javax.swing.JButton();
         jLabel21 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        leer = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -136,8 +146,14 @@ public class vendedores extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(51, 204, 255));
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Listado Ventas"));
 
-        jButton7.setText("jButton7");
+        lim.setText("Limpiar");
+        lim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                limActionPerformed(evt);
+            }
+        });
 
         jLabel16.setText("Filtrar por:");
 
@@ -168,6 +184,13 @@ public class vendedores extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable2);
 
+        leer.setText("LEER");
+        leer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                leerActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -178,26 +201,31 @@ public class vendedores extends javax.swing.JFrame {
                         .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel6Layout.createSequentialGroup()
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jButton7)
+                                .addComponent(lim)
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel21)
                                     .addComponent(jLabel16)))
-                            .addGap(36, 36, 36)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGap(18, 18, 18)
                             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(46, 46, 46)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel19)
-                                .addComponent(jLabel20))
-                            .addGap(31, 31, 31)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField11, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
-                                .addComponent(jTextField10))))
+                                .addGroup(jPanel6Layout.createSequentialGroup()
+                                    .addGap(60, 60, 60)
+                                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(factu, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(nomU, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGap(46, 46, 46)
+                                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel19)
+                                        .addComponent(jLabel20))
+                                    .addGap(31, 31, 31)
+                                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(feU, javax.swing.GroupLayout.DEFAULT_SIZE, 142, Short.MAX_VALUE)
+                                        .addComponent(niU)))
+                                .addGroup(jPanel6Layout.createSequentialGroup()
+                                    .addGap(212, 212, 212)
+                                    .addComponent(leer, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 630, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -206,24 +234,26 @@ public class vendedores extends javax.swing.JFrame {
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jButton7)
+                .addComponent(lim)
                 .addGap(32, 32, 32)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
                     .addComponent(jLabel17)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(factu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel19)
-                    .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(niU, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nomU, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel20)
-                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(feU, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton8)
-                .addGap(50, 50, 50)
-                .addComponent(jLabel21)
+                .addGap(46, 46, 46)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(leer))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 22, Short.MAX_VALUE))
@@ -236,7 +266,7 @@ public class vendedores extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -559,7 +589,6 @@ public class vendedores extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
        datosObtener();
-        System.out.println(caja);
        if(a.contains(nombreF.getText())==false){
            JOptionPane.showMessageDialog(null, "Cliente no encontrado");
        }
@@ -582,35 +611,25 @@ public class vendedores extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        //leerTablaCompra();
-        crearPDF cp = new crearPDF();
-        
-        
         try {
             jalarDato();
-            ra3DAORelacional ra = new ra3DAORelacional();
-            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(vendedores.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DocumentException ex) {
             Logger.getLogger(vendedores.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(vendedores.class.getName()).log(Level.SEVERE, null, ex);
         }
         limpiartabla();
-        //vaciar();
-        //noFaca();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         int a = Integer.parseInt(codpro.getText());
         int b = Integer.parseInt(canpro.getText());
-        
-        
         comprobarPro();
         if(cP.contains(a+"")){
             datostabla(a,b);
             suma();
-//            ra3DAORelacional ra = new ra3DAORelacional();
-//            ra.modificarProducto(a, b);
         }else{
             JOptionPane.showMessageDialog(null, "Articulo no encontrado");
        }
@@ -619,8 +638,21 @@ public class vendedores extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        
+        tablageneral();
+         leer.setVisible(true);
     }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void limActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limActionPerformed
+        nomU.setText("");
+        niU.setText("");
+        feU.setText("");
+        factu.setText("");
+        noFaca();
+    }//GEN-LAST:event_limActionPerformed
+
+    private void leerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leerActionPerformed
+        leerTabla();
+    }//GEN-LAST:event_leerActionPerformed
     
     public void label(String usuario, int a) {
         vendedo = usuario;
@@ -745,7 +777,7 @@ public class vendedores extends javax.swing.JFrame {
         return suma;
     }
 
-    private void jalarDato() throws FileNotFoundException, DocumentException{
+    private void jalarDato() throws FileNotFoundException, DocumentException, IOException{
         LocalDateTime datetime = LocalDateTime.now();
         int cajaV = caja;
         String noFactura = noFac.getText();
@@ -768,38 +800,22 @@ public class vendedores extends javax.swing.JFrame {
             //enviar linkedlist por parametros
             factura.add(new facturaPOO(idProducto,nombreProducto,cantidad,precio,subtotal));
         }
-        for(facturaPOO dat : factura){
-            System.out.println(dat.getCodigoProducto());
-            
-        }
+        
+        String a = factura+"\n"+noFactura+"\n"+fechaV+"\n"+hora+"\n"+nomVendedor+"\n"+cajaV+"\n"+nit+"\n"+nombreCliente+"\n"+ttl;
         cp.crearDocumento(factura,noFactura, fechaV,hora, nomVendedor, String.valueOf(cajaV),nit,nombreCliente,ttl);
-        crearFactura();
+        crearFactura(a);
     }
     
-    private void leerTablaCompra(){
-        LinkedList<facturaPOO> factura = new LinkedList<>();
-        for (int i = 0; i < jTable1.getRowCount(); i++) {
-            String idProducto = String.valueOf(jTable1.getValueAt(i, 0));
-            String nombreProducto = String.valueOf(jTable1.getValueAt(i, 1));
-            String cantidad = String.valueOf(jTable1.getValueAt(i, 2));
-            String precio = String.valueOf(jTable1.getValueAt(i, 3));
-            String subtotal = String.valueOf(jTable1.getValueAt(i, 4));
-            //enviar linkedlist por parametros
-            factura.add(new facturaPOO(idProducto,nombreProducto,cantidad,precio,subtotal));
-        }
-        for(facturaPOO dat : factura){
-            System.out.println(dat.getCodigoProducto());
-            
-        }
-    }
-    private void crearFactura(){
+    
+    public void crearFactura(String a){
+        crearPDF cpa = new crearPDF();
         ra3DAORelacional ra = new ra3DAORelacional();
         clientesPOO cp = ra.mostrarCliente(nitF.getText());
         if(cp != null){
             int asd = cp.getId();
-            //hisventasPOO hv = new hisventasPOO(asd,fecha.getText(),total.getText(),"prueba");
+            hisventasPOO hv = new hisventasPOO(asd,fecha.getText(),total.getText(),a);
         
-            //ra.crearhisVentas(hv);
+            ra.crearhisVentas(hv);
         }else{
             System.out.println("ERROR en crear factura");
         }
@@ -816,6 +832,7 @@ public class vendedores extends javax.swing.JFrame {
     }
     
     private void noFaca(){
+        
         String columnas[] = {"No Factura", "Nit", "Nombre", "Fecha", "Total","Accion"};
         t2 = new DefaultTableModel(null, columnas);
         ra3DAORelacional ra = new ra3DAORelacional();
@@ -826,14 +843,48 @@ public class vendedores extends javax.swing.JFrame {
             ayuda[2] = dat.getNombreC();
             ayuda[3] = dat.getFecha();
             ayuda[4] = dat.getTotal();
-            ayuda[5] = dat.getAccion();
+            ayuda[5] = "ACCION";    
+            
+            
             noFac.setText(String.valueOf(dat.getNo_factura()+1));
+            
             t2.addRow(ayuda);
         }
        jTable2.setModel(t2);
+       jTable2.setRowHeight(32);
     }
     
+    private void tablageneral(){
+        
+        String columnas[] = {"No Factura", "Nit", "Nombre", "Fecha", "Total","Accion"};
+        t3 = new DefaultTableModel(null, columnas);
+        ra3DAORelacional ra = new ra3DAORelacional();
+       for (listarFacturasPOO dat : ra.listarfacturasU(factu.getText(), niU.getText(), nomU.getText(), feU.getText())) {
+            Object ayuda[] = new Object[6];
+            ayuda[0] = dat.getNo_factura();
+            ayuda[1] = dat.getNit();
+            ayuda[2] = dat.getNombreC();
+            ayuda[3] = dat.getFecha();
+            ayuda[4] = dat.getTotal();
+            ayuda[5] = dat.getAccion();    
+            
+            
+            //noFac.setText(String.valueOf(dat.getNo_factura()+1));
+            
+            t3.addRow(ayuda);
+        }
+       jTable2.setModel(t3);
+       jTable2.setRowHeight(32);
+    }
     
+    private void leerTabla(){
+        
+        int ax = (int) jTable2.getValueAt(jTable2.getSelectedRow(), 0);
+        ra3DAORelacional ra = new ra3DAORelacional();
+        ra.ejecutarPDF(ax);
+        
+        
+    }
     
 
     /**
@@ -877,13 +928,14 @@ public class vendedores extends javax.swing.JFrame {
     private javax.swing.JTextField codpro;
     private javax.swing.JComboBox<String> comboCliente;
     private javax.swing.JTextField correoF;
+    private javax.swing.JTextField factu;
+    private javax.swing.JTextField feU;
     private javax.swing.JLabel fecha;
     private javax.swing.JTextField generoF;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel11;
@@ -915,13 +967,13 @@ public class vendedores extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JButton leer;
+    private javax.swing.JButton lim;
     private javax.swing.JButton limp;
+    private javax.swing.JTextField niU;
     private javax.swing.JTextField nitF;
     private javax.swing.JLabel noFac;
+    private javax.swing.JTextField nomU;
     private javax.swing.JTextField nombreF;
     private javax.swing.JTextField total;
     // End of variables declaration//GEN-END:variables

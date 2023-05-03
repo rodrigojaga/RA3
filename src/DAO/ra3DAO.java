@@ -22,4 +22,5 @@ public interface ra3DAO {
     
     public LinkedList<listarFacturasPOO> listarFacturas();
     public void ejecutarPDF (int id);
+    public LinkedList<listarFacturasPOO> listarfacturasU(String factura,String nit, String nombre, String fecha);
 }
